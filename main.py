@@ -42,28 +42,25 @@ def turn_left():
 
 def turn_right():
     return robot.turn(90)
-
-for i in range(10):
-    drive(True)
     
-# # Set the gain of the proportional line controller. This means that for every
-# # percentage point of light deviating from the threshold, we set the turn
-# # rate of the drivebase to 1.2 degrees per second.
+# Set the gain of the proportional line controller. This means that for every
+# percentage point of light deviating from the threshold, we set the turn
+# rate of the drivebase to 1.2 degrees per second.
 
-# # For example, if the light value deviates from the threshold by 10, the robot
-# # steers at 10*1.2 = 12 degrees per second.
-# PROPORTIONAL_GAIN = 1.2
+# For example, if the light value deviates from the threshold by 10, the robot
+# steers at 10*1.2 = 12 degrees per second.
+PROPORTIONAL_GAIN = 1.2
 
-# # Start following the line endlessly.
-# while True:
-#     # Calculate the deviation from the threshold.
-#     deviation = line_sensor.reflection() - threshold
+# Start following the line endlessly.
+while True:
+    # Calculate the deviation from the threshold.
+    deviation = line_sensor.reflection() - threshold
 
-#     # Calculate the turn rate.
-#     turn_rate = PROPORTIONAL_GAIN * deviation
+    # Calculate the turn rate.
+    turn_rate = PROPORTIONAL_GAIN * deviation
 
-#     # Set the drive base speed and turn rate.
-#     robot.drive(DRIVE_SPEED, turn_rate)
+    # Set the drive base speed and turn rate.
+    robot.drive(DRIVE_SPEED, turn_rate)
 
-#     # You can wait for a short time or do other things in this loop.
-#     wait(10)
+    # You can wait for a short time or do other things in this loop.
+    wait(10)
