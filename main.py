@@ -31,7 +31,7 @@ def inch_to_mm(float num):
     return num * 25.4 # Recommended Conversion Factor in PyBricks Docs
 
 # Modular Commands
-def drive(boolean move_forward):
+def drive(move_forward: boolean):
     if (move_forward):
         return robot.straight(inch_to_mm(12))
     else:
