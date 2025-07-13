@@ -2,7 +2,7 @@
 from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import Motor
 from pybricks.nxtdevices import LightSensor
-from pybricks.ev3devices import ColorSensor, UltrasonicSensor
+from pybricks.ev3devices import ColorSensor, GyroSensor
 from pybricks.parameters import Port
 from pybricks.robotics import DriveBase
 from pybricks.parameters import Port, Stop, Direction, Button, Color
@@ -22,9 +22,9 @@ ev3 = EV3Brick()
 left_motor = Motor(Port.D)
 right_motor = Motor(Port.A)
 pickup_motor = Motor(Port.B)
-line_sensor = LightSensor(Port.S4)
-color_sensor = ColorSensor(Port.S1)
-ultrasonic_sensor = UltrasonicSensor(Port.S3)
+line_sensor = LightSensor(Port.S4)  
+color_sensor = ColorSensor(Port.S2)
+gyro_motor = GyroSensor(Port.S3)
 
 robot = DriveBase(left_motor, right_motor, wheel_diameter, axle_track)
 
@@ -42,42 +42,23 @@ while True:
     robot.drive(DRIVE_SPEED, turn_rate)
 
     wait(10)
-robot.straight(303)
-robot.turn(90)
+gyro.reset_angle(0)
 robot.straight(303)
 robot.turn(-90)
+robot.straight(606)
+robot.turn(90)
 robot.straight(303)
-distance=ultrasonic_sensor
-speed=180
-speaker.beep()
-if(distance-10<303):
-    ev3.speaker.say("Ball detected")
-    pick_up.run_angle(speed,200,wait=True)
-    ev3.speaker.beep()
+ev3.speaker.say("Ball detected")
+pick_up.run_angle(speed,200,wait=True)
+ev3.speaker.beep()
 # robot.straight(-303)
+# robot.turn(90)
+# robot.straight(303)
 # robot.turn(-90)
-# robot.straight(606)
+# robot.straight(100)
+# robot.straight(-100)
 # robot.turn(90)
 # robot.straight(606)
-# robot.turn(90)
-# distance=ultrasonic_sensor.distance()
-# if(distance-10<303):
-#     ev3.speaker.say("Ball detected")
-#     pick_up.run_angle(speed,200,wait=True)
-#     ev3.speaker.beep()
-# else:
-#     break
-# robot.turn(90)
-# robot.straight(606)
-# robot.turn(90)
-# robot.straight(606)
-# robot.turn(90)
-# robot.straight(606)
-# robot.turn(90)
-# distance=ultrasonic_sensor.distance()
-# if(distance-10<303):
-#     ev3.speaker.say("Ball detected")
-#     pick_up.run_angle(speed,200,wait=True)
-#     ev3.speaker.beep()
-# else:
-#     break
+# robot.turn(-90)
+# robot.straight(100)
+# robot.straight(-100)
