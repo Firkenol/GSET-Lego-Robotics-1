@@ -1,6 +1,8 @@
 #!/usr/bin/env pybricks-micropython
 from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import Motor
+from pybricks.nxtdevices import LightSensor
+from pybricks.ev3devices import ColorSensor, UltrasonicSensor
 from pybricks.parameters import Port
 from pybricks.robotics import DriveBase
 from pybricks.parameters import Port, Stop, Direction, Button, Color
@@ -10,57 +12,72 @@ from pybricks.tools import wait, StopWatch, DataLog
 wheel_diameter = 55.5
 axle_track = 104
 
-# Calculate the light threshold. Choose values based on your measurements.
-BLACK = 9
-WHITE = 85
+BLACK = 1
+WHITE = 99
 threshold = (BLACK + WHITE) / 2
+DRIVE_SPEED = 80
 
-# Set the drive speed at 100 millimeters per second.
-DRIVE_SPEED = 100
-
-# Initialize the EV3 Brick
 ev3 = EV3Brick()
 
-# Motors & Drivebase Initialization
-left_motor = Motor(Port.B)
-right_motor = Motor(Port.C)
+left_motor = Motor(Port.D)
+right_motor = Motor(Port.A)
+pickup_motor = Motor(Port.B)
+line_sensor = LightSensor(Port.S4)
+color_sensor = ColorSensor(Port.S1)
+ultrasonic_sensor = UltrasonicSensor(Port.S3)
+
 robot = DriveBase(left_motor, right_motor, wheel_diameter, axle_track)
 
-# Conversion Utility Functions
-def inch_to_mm(float num):
-    return num * 25.4 # Recommended Conversion Factor in PyBricks Docs
+PROPORTIONAL_GAIN = 1.3
 
-# Modular Commands
-def drive(move_forward: boolean):
-    if (move_forward):
-        return robot.straight(inch_to_mm(12))
-    else:
-        return robot.straight(inch_to_mm(-12))
-
-def turn_left():
-    return robot.turn(-90)
-
-def turn_right():
-    return robot.turn(90)
-    
-# Set the gain of the proportional line controller. This means that for every
-# percentage point of light deviating from the threshold, we set the turn
-# rate of the drivebase to 1.2 degrees per second.
-
-# For example, if the light value deviates from the threshold by 10, the robot
-# steers at 10*1.2 = 12 degrees per second.
-PROPORTIONAL_GAIN = 1.2
-
-# Start following the line endlessly.
 while True:
-    # Calculate the deviation from the threshold.
+    # Check if red is detected
+    if color_sensor.color() == Color.RED:
+        robot.stop()
+        ev3.speaker.beep()  # Optional: make a sound to confirm stop
+        break  # Exit the loop to fully stop
+
     deviation = line_sensor.reflection() - threshold
-
-    # Calculate the turn rate.
-    turn_rate = PROPORTIONAL_GAIN * deviation
-
-    # Set the drive base speed and turn rate.
+    turn_rate = PROPORTIONAL_GAIN * deviation * 2.5
     robot.drive(DRIVE_SPEED, turn_rate)
 
-    # You can wait for a short time or do other things in this loop.
     wait(10)
+robot.straight(303)
+robot.turn(90)
+robot.straight(303)
+robot.turn(-90)
+robot.straight(303)
+distance=ultrasonic_sensor
+speed=180
+speaker.beep()
+if(distance-10<303):
+    ev3.speaker.say("Ball detected")
+    pick_up.run_angle(speed,200,wait=True)
+    ev3.speaker.beep()
+# robot.straight(-303)
+# robot.turn(-90)
+# robot.straight(606)
+# robot.turn(90)
+# robot.straight(606)
+# robot.turn(90)
+# distance=ultrasonic_sensor.distance()
+# if(distance-10<303):
+#     ev3.speaker.say("Ball detected")
+#     pick_up.run_angle(speed,200,wait=True)
+#     ev3.speaker.beep()
+# else:
+#     break
+# robot.turn(90)
+# robot.straight(606)
+# robot.turn(90)
+# robot.straight(606)
+# robot.turn(90)
+# robot.straight(606)
+# robot.turn(90)
+# distance=ultrasonic_sensor.distance()
+# if(distance-10<303):
+#     ev3.speaker.say("Ball detected")
+#     pick_up.run_angle(speed,200,wait=True)
+#     ev3.speaker.beep()
+# else:
+#     break
