@@ -13,7 +13,7 @@ BLACK = 1
 WHITE = 99
 threshold = (BLACK + WHITE) / 2
 LINE_FOLLOW_SPEED = 80
-MAZE_SPEED = 150
+MAZE_SPEED = 120
 PROPORTIONAL_GAIN = 1.3
 
 ev3 = EV3Brick()
@@ -29,7 +29,7 @@ ultrasonic = UltrasonicSensor(Port.S1)
 robot = DriveBase(left_motor, right_motor, wheel_diameter, axle_track)
 
 # --- PID Turn Function ---
-def pid_turn_to_angle(target_angle, kp=2.5, ki=0, kd=0.5, tolerance=2, max_speed=100):
+def pid_turn_to_angle(target_angle, kp=1.2, ki=0, kd=0.5, tolerance=2, max_speed=100):
     integral = 0
     last_error = 0
 
@@ -72,7 +72,7 @@ def driveb_until(target_distance_cm, speed=MAZE_SPEED):
     """
     while True:
         distance = ultrasonic.distance() / 10  # convert mm to cm
-        if distance >= target_distance_cm:
+        if distance <= target_distance_cm:
             robot.stop()
             break
         robot.drive(-speed, 0)  # negative speed to go backwards
@@ -90,7 +90,7 @@ while True:
         break
 
     deviation = line_sensor.reflection() - threshold
-    turn_rate = PROPORTIONAL_GAIN * deviation * 2.75
+    turn_rate = PROPORTIONAL_GAIN * deviation * 2.5
     robot.drive(LINE_FOLLOW_SPEED, turn_rate)
     wait(10)
 
@@ -101,30 +101,29 @@ robot.settings(straight_speed=MAZE_SPEED)
 
 # --- Maze Driving Sequence using PID and Ultrasonic ---
 drive_until(15.6) 
-pid_turn_to_angle(-90) 
+pid_turn_to_angle(90) 
 
-drive_until(13)
+drive_until(22.5)
 pid_turn_to_angle(0)
 
-# Faster pickup motor
-drive_until(30)
-pickup_motor.run_angle(200, 180, wait=True)  # speed=200
-drive_until(28)
+drive_until(23.6)
 ev3.speaker.say("Ball detected")
+
+# Faster pickup motor
+pickup_motor.run_angle(200, 150, wait=True)  # speed=200
 
 ev3.speaker.beep()
 driveb_until(55.1)
-ev3.speaker.beep()
-ev3.speaker.beep()
+
 
 pid_turn_to_angle(-90)
-driveb_until(38.0)
+driveb_until(41.2)
 
 pid_turn_to_angle(0)
 drive_until(32.0)
 
 driveb_until(55.1)
-pid_turn_to_angle(90)
+pid_turn_to_angle(-90)
 
 drive_until(22.5)
 
